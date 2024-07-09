@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   const { username, password } = await request.json()
@@ -9,23 +9,23 @@ export async function POST(request: NextRequest) {
   ) {
     const response = NextResponse.json({
       id: 5301,
-      username: 'test user',
+      username: "test user",
       contracts: [
         {
           id: 301,
-          symbol: 'eth_lido',
+          symbol: "eth_lido",
           holding: 325.1,
         },
       ],
     })
 
-    response.cookies.set('token', 'exampletoken', {
+    response.cookies.set("token", "exampletoken", {
       httpOnly: true,
-      path: '/',
+      path: "/",
     })
 
     return response
   } else {
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 })
   }
 }

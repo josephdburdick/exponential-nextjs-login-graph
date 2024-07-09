@@ -1,14 +1,14 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import { AuthProvider } from "@/components/context/AuthContext"
+import NavMenu from "@/components/global/NavMenu"
+import { Toaster } from "@/components/ui/toaster"
+import { cn } from "@/lib/utils"
+import type { Metadata } from "next"
 
-import { cn } from '@/lib/utils'
-import { AuthProvider } from '@/components/context/AuthContext'
-import NavMenu from '@/components/global/NavMenu'
-import { Toaster } from '@/components/ui/toaster'
+import "./globals.css"
 
 export const metadata: Metadata = {
-  title: 'Exponential Assessment',
-  description: 'UI, Route Handling, and Graph',
+  title: "Exponential Assessment",
+  description: "UI, Route Handling, and Graph",
 }
 
 export default function RootLayout({
@@ -18,7 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn('min-h-screen bg-background font-sans antialiased')}>
+      <body
+        className={cn(
+          "flex min-h-screen flex-col bg-background font-sans antialiased",
+        )}
+      >
         <AuthProvider>
           <NavMenu />
           {children}

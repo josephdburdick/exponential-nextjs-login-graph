@@ -2,7 +2,14 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+Add mock credentials inside `.env.local`:
+
+```
+USER_NAME=user@expx.fi
+USER_PASS=Br98PKe*js76QaF@1OdX
+```
+
+Then run the development server:
 
 ```bash
 npm run dev

@@ -1,12 +1,14 @@
-import PageHeader from '@/components/global/PageHeader'
+import PageHeader from "@/components/global/PageHeader"
 
-import DashboardChart from './_components/DashboardChart'
+import DashboardChart from "./_components/DashboardChart"
 
 const Dashboard = () => {
   return (
-    <div className="container">
+    <div className="flex min-h-screen flex-col items-center justify-center">
       <PageHeader>Dashboard</PageHeader>
-      <DashboardChart />
+      <div className="container">
+        <DashboardChart />
+      </div>
     </div>
   )
 }

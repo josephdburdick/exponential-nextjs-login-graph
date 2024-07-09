@@ -1,10 +1,17 @@
-'use client'
+"use client"
 
-import { useAuth } from '@/components/context/AuthContext'
-import { useEffect } from 'react'
+import { useAuth } from "@/components/context/AuthContext"
+import { useToast } from "@/components/ui/use-toast"
+import { useEffect } from "react"
 
 export default function Logout() {
   const { logout } = useAuth()
-  useEffect(() => logout(), [])
+  const { toast } = useToast()
+  useEffect(() => {
+    toast({
+      description: "You have been logged out.",
+    })
+    logout()
+  }, [])
   return <></>
 }

@@ -1,6 +1,6 @@
-'use client'
+"use client"
 
-import { useAuth } from '@/components/context/AuthContext'
+import { useAuth } from "@/components/context/AuthContext"
 import {
   ChartConfig,
   ChartContainer,
@@ -8,9 +8,18 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart'
-import { useState, useEffect } from 'react'
-import { XAxis, Legend, CartesianGrid, BarChart, Bar } from 'recharts'
+} from "@/components/ui/chart"
+import { useEffect, useState } from "react"
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  XAxis,
+  YAxis,
+} from "recharts"
 
 interface DataPoint {
   date: string
@@ -28,7 +37,7 @@ export default function DashboardChart() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/api/graph-data')
+      const response = await fetch("/api/graph-data")
       const { data } = await response.json()
       setData(data)
     }
@@ -46,21 +55,12 @@ export default function DashboardChart() {
     tvl: parseFloat(entry.tvl.toString()),
   }))
 
-  const chartConfig = {
-    desktop: {
-      label: 'apy',
-      color: '#2563eb',
-    },
-    mobile: {
-      label: 'tvl',
-      color: '#60a5fa',
-    },
-  } satisfies ChartConfig
+  const chartConfig = {} satisfies ChartConfig
 
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <BarChart accessibilityLayer data={chartData}>
-        <CartesianGrid vertical={false} strokeDasharray={'3 3'} />
+      <LineChart accessibilityLayer data={chartData}>
+        <CartesianGrid vertical={false} strokeDasharray={"3 3"} />
 
         <XAxis
           dataKey="date"
@@ -68,13 +68,17 @@ export default function DashboardChart() {
           tickMargin={10}
           axisLine={false}
         />
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <ChartLegend content={<ChartLegendContent />} />
+        <YAxis dataKey="apy" />
         <ChartTooltip />
         <Legend />
-        <Bar dataKey="apy" fill="var(--color-desktop)" radius={4} />
-        <Bar dataKey="tvl" fill="var(--color-mobile)" radius={4} />
-      </BarChart>
+        <Line
+          type="monotone"
+          dataKey="apy"
+          stroke="#8884d8"
+          activeDot={{ r: 8 }}
+        />
+        <Line type="monotone" dataKey="tvl" stroke="#82ca9d" />
+      </LineChart>
     </ChartContainer>
   )
 }
