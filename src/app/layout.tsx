@@ -3,6 +3,7 @@ import './globals.css'
 
 import { cn } from '@/lib/utils'
 import { AuthProvider } from '@/components/context/AuthContext'
+import NavMenu from '@/components/global/NavMenu'
 
 export const metadata: Metadata = {
   title: 'Exponential Assessment',
@@ -17,7 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn('min-h-screen bg-background font-sans antialiased')}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <NavMenu />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   )
