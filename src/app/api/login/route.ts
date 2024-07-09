@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
-  const { email, password } = await request.json();
+  const { username, password } = await request.json()
+
   return NextResponse.json({
-    email,
+    username,
     password,
-  });
+  })
 }

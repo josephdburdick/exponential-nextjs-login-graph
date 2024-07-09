@@ -33,9 +33,19 @@ export default function LoginForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const request = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    })
+
+    if (request.ok) {
+      const response = await Promise.resolve(request.json())
+      console.log({ response })
+    }
   }
 
   return (
