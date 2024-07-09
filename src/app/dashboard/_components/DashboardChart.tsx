@@ -10,15 +10,7 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 import { useState, useEffect } from 'react'
-import {
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  CartesianGrid,
-  BarChart,
-  Bar,
-} from 'recharts'
+import { XAxis, Legend, CartesianGrid, BarChart, Bar } from 'recharts'
 
 interface DataPoint {
   date: string
