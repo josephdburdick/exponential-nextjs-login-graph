@@ -15,6 +15,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/components/context/AuthContext'
 
+import { useToast } from '@/components/ui/use-toast'
+
 const formSchema = z.object({
   username: z.string().min(3, {
     message: 'Username must be at least 3 characters.',
@@ -25,6 +27,8 @@ const formSchema = z.object({
 })
 
 export default function LoginForm() {
+  const { toast } = useToast()
+
   const { login } = useAuth()
   //  Define form with resolver and defaults
   const form = useForm<z.infer<typeof formSchema>>({
@@ -37,7 +41,15 @@ export default function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { username, password } = values
-    await login(username, password)
+    try {
+      await login(username, password)
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to login',
+        variant: 'destructive',
+      })
+    }
   }
 
   return (

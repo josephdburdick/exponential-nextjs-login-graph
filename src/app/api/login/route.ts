@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   const { username, password } = await request.json()
-
+  console.log(process.env.USER_NAME)
   if (
     username === process.env.USER_NAME &&
     password === process.env.USER_PASS

@@ -4,6 +4,7 @@ import './globals.css'
 import { cn } from '@/lib/utils'
 import { AuthProvider } from '@/components/context/AuthContext'
 import NavMenu from '@/components/global/NavMenu'
+import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
   title: 'Exponential Assessment',
@@ -22,6 +23,7 @@ export default function RootLayout({
           <NavMenu />
           {children}
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   )
