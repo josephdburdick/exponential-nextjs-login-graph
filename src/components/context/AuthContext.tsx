@@ -1,77 +1,83 @@
-"use client"
+"use client";
 
-import ROUTES from "@/lib/constants/routes"
-import { useRouter } from "next/navigation"
-import {
-  ReactNode,
+import React, {
   createContext,
-  useContext,
-  useEffect,
   useState,
-} from "react"
-
-interface User {
-  id: number
-  username: string
-}
+  useEffect,
+  useContext,
+  ReactNode,
+} from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import users from "@/data/users";
 
 interface AuthContextType {
-  user: User | null
-  login: (username: string, password: string) => Promise<void>
-  logout: () => void
+  user: any;
+  login: (username: string, password: string) => Promise<void>;
+  logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const router = useRouter()
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user")
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
+    const getUser = async (username: string) => {
+      const user = users.find((user) => user.username === username);
+      setUser(user);
+    };
+
+    const token = Cookies.get("token");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      const decoded = jwt.decode(token);
+      decoded?.username && getUser(decoded.username);
     }
-  }, [])
+  }, []);
 
   const login = async (username: string, password: string) => {
-    const response = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-
-      body: JSON.stringify({ username, password }),
-    })
-
-    if (!response.ok) {
-      throw new Error("Login failed")
+    try {
+      const response = await axios.post("/api/login", { username, password });
+      if (response.status === 200) {
+        Cookies.set("token", response.data.token, {
+          expires: 1,
+          secure: true,
+          sameSite: "strict",
+        });
+        axios.defaults.headers.common["Authorization"] =
+          `Bearer ${response.data.token}`;
+        setUser(response.data);
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error("Login failed", error);
     }
-
-    const data = await response.json()
-    const user = { id: data.id, username: data.username }
-    setUser(user)
-    localStorage.setItem("user", JSON.stringify(user))
-    router.push(ROUTES.dashboard.path)
-  }
+  };
 
   const logout = () => {
-    setUser(null)
-    localStorage.removeItem("user")
-    router.push(ROUTES.home.path)
-  }
+    Cookies.remove("token");
+    setUser(null);
+    delete axios.defaults.headers.common["Authorization"];
+    router.push("/login");
+  };
 
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};
 
 export const useAuth = () => {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider")
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  return context
-}
+  return context;
+};

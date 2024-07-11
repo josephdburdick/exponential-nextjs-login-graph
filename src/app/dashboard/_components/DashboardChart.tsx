@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useAuth } from "@/components/context/AuthContext"
+import { useAuth } from "@/components/context/AuthContext";
 import {
   ChartConfig,
   ChartContainer,
@@ -8,8 +8,8 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { useEffect, useState } from "react"
+} from "@/components/ui/chart";
+import { useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -19,43 +19,43 @@ import {
   LineChart,
   XAxis,
   YAxis,
-} from "recharts"
+} from "recharts";
 
 interface DataPoint {
-  date: string
-  apy: number
-  tvl: number
+  date: string;
+  apy: number;
+  tvl: number;
 }
 
 interface GraphData {
-  series: DataPoint[]
+  series: DataPoint[];
 }
 
 export default function DashboardChart() {
-  const { user } = useAuth()
-  const [data, setData] = useState<GraphData | null>(null)
+  const { user } = useAuth();
+  const [data, setData] = useState<GraphData | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/api/graph-data")
-      const { data } = await response.json()
-      setData(data)
-    }
-    if (!user) return
+      const response = await fetch("/api/graph-data");
+      const { data } = await response.json();
+      setData(data);
+    };
+    if (!user) return;
 
-    fetchData()
-  }, [user])
+    fetchData();
+  }, [user]);
 
-  if (!user) return <div>Please log in to view the dashboard.</div>
-  if (!data) return <div>Loading...</div>
+  if (!user) return <div>Please log in to view the dashboard.</div>;
+  if (!data) return <div>Loading...</div>;
 
   const chartData = data.series.map((entry) => ({
     date: new Date(entry.date).toLocaleDateString(),
     apy: parseFloat(entry.apy.toString()),
     tvl: parseFloat(entry.tvl.toString()),
-  }))
+  }));
 
-  const chartConfig = {} satisfies ChartConfig
+  const chartConfig = {} satisfies ChartConfig;
 
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
@@ -80,5 +80,5 @@ export default function DashboardChart() {
         <Line type="monotone" dataKey="tvl" stroke="#82ca9d" />
       </LineChart>
     </ChartContainer>
-  )
+  );
 }
